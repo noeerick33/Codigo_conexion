@@ -1,0 +1,38 @@
+package conexion_mysql;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class pruebaConexion {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		//conexion y mostrar los elementos dentro de la tabla que esta en la base de datos
+		DataConnection conexion = new DataConnection();
+		Connection cm = null;
+		Statement stm = null;
+		ResultSet rs = null;
+		
+		try {
+		  cm = conexion.conectar();
+		  stm = cm.createStatement();
+		  rs = stm.executeQuery("SELECT * FROM contacto");
+		  
+		  while(rs.next()) {
+			  //Se tienen que enumerar para ver cual va a mostrar los datos ordenados 
+			 int id = rs.getInt(1); // primero se muestra el id
+			 String Nombre = rs.getString(2); //despues el nombre 
+			 String Apellidos = rs.getString(3);// a continuación apellidos
+			 String Telefonos = rs.getString(4); // por ultimo telefonos
+			 
+			 System.out.println(id+" - "+Nombre+" "+Apellidos+" - "+Telefonos);
+		  }
+		
+		} catch (SQLException e) {
+			
+		}
+	}
+
+}
