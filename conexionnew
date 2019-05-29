@@ -1,0 +1,95 @@
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
+
+public class XD extends JFrame {
+
+	
+	   public static final String URL = "jdbc:mysql://localhost:3306/Clientes";
+	    public static final String USR = "root";
+	    public static final String PASS = "";
+	
+	
+	private JPanel contentPane;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					XD frame = new XD();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public XD() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JButton btnHola = new JButton("HOLA");
+		btnHola.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				 try {
+				        Connection oCon = null;
+				        oCon = getConection();
+				        PreparedStatement ps;
+				        ResultSet res;
+				        ps = oCon.prepareStatement("SELECT * FROM Datos_Generales");
+				        res=ps.executeQuery();
+				        if(res.next()){
+				            JOptionPane.showMessageDialog(null, res.getString("Nombres")+ " " + res.getString("Apellidos"));
+				        }else{
+				            JOptionPane.showMessageDialog(null, "No existen datos");
+				        }
+				        oCon.close();
+				        }catch(Exception e){
+				        
+				            System.out.println(e);
+				        }
+			}
+			private Connection getConection() {
+				Connection oCon = null;
+		        try {
+		            Class.forName("com.mysql.cj.jdbc.Driver");
+		            oCon = (Connection) DriverManager.getConnection(URL, USR, PASS);
+		            JOptionPane.showMessageDialog(null, "Conexión Exitosa");
+
+		        } catch (ClassNotFoundException | SQLException e) {
+		            System.out.println(e);
+		        }
+		        return oCon;
+			}
+		});
+		btnHola.setBounds(49, 69, 89, 23);
+		contentPane.add(btnHola);
+	}
+}
